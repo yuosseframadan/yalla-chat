@@ -19,7 +19,7 @@
     "emailIndex": {
       "$emailKey": {
         ".read": "auth != null",
-        ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid) || (data.val() === auth.uid && newData.val() === auth.uid) || (data.val() === auth.uid && !newData.exists()))"
+        ".write": "auth != null && newData.isString() && newData.val() === auth.uid"
       }
     },
     "presence": {
@@ -40,13 +40,13 @@
           }
         },
         "title": {
-          ".write": "auth != null && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true"
+          ".write": "auth != null && data.parent().child('members').child(auth.uid).val() === true"
         },
         "lastText": {
-          ".write": "auth != null && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true && newData.isString() && newData.val().length <= 100"
+          ".write": "auth != null && data.parent().child('members').child(auth.uid).val() === true && newData.isString() && newData.val().length <= 100"
         },
         "lastTs": {
-          ".write": "auth != null && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true && newData.isNumber()"
+          ".write": "auth != null && data.parent().child('members').child(auth.uid).val() === true && newData.isNumber()"
         },
         "msgs": {
           ".read": "auth != null && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true",
@@ -64,8 +64,8 @@
     },
     "userChats": {
       "$uid": {
-        ".read": "auth != null && auth.uid === $uid",
         "$chatId": {
+          ".read": "auth != null && auth.uid === $uid",
           ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (newData.val() === true && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true && root.child('chats').child($chatId).child('members').child($uid).val() === true))"
         }
       }
@@ -73,7 +73,7 @@
     "blocks": {
       "$ownerUid": {
         "$blockedUid": {
-          ".read": "auth != null && (auth.uid === $ownerUid || auth.uid === $blockedUid)",
+          ".read": "auth != null && auth.uid === $ownerUid",
           ".write": "auth != null && auth.uid === $ownerUid && (!newData.exists() || newData.val() === true)"
         }
       }
@@ -93,14 +93,8 @@
     "statuses": {
       ".read": "auth != null",
       "$statusId": {
-        ".write": "auth != null && ((!data.exists() && newData.child('s').val() === auth.uid) || (data.child('s').val() === auth.uid && ((!newData.exists()) || newData.child('s').val() === auth.uid)))",
+        ".write": "auth != null && ((!data.exists() && newData.child('s').val() === auth.uid) || (data.child('s').val() === auth.uid && newData.child('s').val() === auth.uid))",
         ".validate": "newData.hasChildren(['s','t','ts','expiresAt']) && newData.child('s').isString() && newData.child('t').isString() && newData.child('t').val().length > 0 && newData.child('t').val().length <= 280 && newData.child('ts').isNumber() && newData.child('expiresAt').isNumber()"
-      }
-    },
-    "nickIndex": {
-      "$nickKey": {
-        ".read": "auth != null",
-        ".write": "auth != null && ((!data.exists() && newData.val() === auth.uid) || (data.val() === auth.uid && newData.val() === auth.uid) || (data.val() === auth.uid && !newData.exists()))"
       }
     }
   }
