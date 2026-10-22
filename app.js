@@ -34,7 +34,7 @@ function showView(view){["authView","profileView","appView"].forEach(id=>$(id).c
 function profilePath(uid){return `users/${uid}`}
 function chatPath(id){return `chats/${id}`}
 function isConfigReady(){return firebaseConfig.databaseURL.startsWith("https://") && !firebaseConfig.databaseURL.includes("REPLACE_")}
-function friendlyError(e){const map={"auth/invalid-credential":"البريد الإلكتروني أو كلمة المرور غير صحيحة","auth/email-already-in-use":"البريد الإلكتروني مستخدم بالفعل","auth/weak-password":"كلمة المرور ضعيفة","auth/invalid-email":"صيغة البريد الإلكتروني غير صحيحة","auth/too-many-requests":"محاولات كثيرة، حاول لاحقاً","auth/operation-not-allowed":"فعّل تسجيل الدخول بالبريد وكلمة المرور من Firebase Authentication","auth/network-request-failed":"تحقق من اتصال الإنترنت وحاول مرة أخرى","auth/user-not-found":"لا يوجد حساب بهذا البريد","auth/wrong-password":"كلمة المرور غير صحيحة","PERMISSION_DENIED":"قواعد Firebase لا تسمح بالعملية"};return map[e.code]||e.message||"حدث خطأ غير متوقع"}
+function friendlyError(e){const map={"auth/invalid-credential":"البريد الإلكتروني أو كلمة المرور غير صحيحة","auth/email-already-in-use":"البريد الإلكتروني مستخدم بالفعل","auth/weak-password":"كلمة المرور ضعيفة","auth/invalid-email":"صيغة البريد الإلكتروني غير صحيحة","auth/too-many-requests":"محاولات كثيرة، حاول لاحقاً","auth/operation-not-allowed":"فعّل طريقة تسجيل الدخول المطلوبة من Firebase Authentication > Sign-in method","auth/network-request-failed":"تحقق من اتصال الإنترنت وحاول مرة أخرى","auth/user-not-found":"لا يوجد حساب بهذا البريد","auth/wrong-password":"كلمة المرور غير صحيحة","auth/unauthorized-domain":"نطاق الموقع غير مصرح به في Firebase. أضف yalla-chat-gules.vercel.app إلى Authentication > Settings > Authorized domains","auth/invalid-api-key":"مفتاح Firebase غير صحيح؛ راجع إعدادات تطبيق الويب في Firebase","auth/popup-blocked":"المتصفح منع نافذة Google؛ اسمح بالنوافذ المنبثقة أو أعد المحاولة","auth/popup-closed-by-user":"أغلقت نافذة تسجيل الدخول قبل إكمال العملية","auth/configuration-not-found":"طريقة تسجيل الدخول غير مفعلة في Firebase Authentication","PERMISSION_DENIED":"قواعد Firebase لا تسمح بالعملية"};return map[e.code]||e.message||"حدث خطأ غير متوقع"}
 function renderAvatarPicker(){ $("avatarPicker").innerHTML=avatars.map((a,i)=>`<button type="button" class="avatar-choice ${state.selectedAvatar===`avatar${i+1}`?"selected":""}" data-avatar="avatar${i+1}">${a}</button>`).join("");$("avatarPicker").querySelectorAll("[data-avatar]").forEach(b=>b.onclick=()=>{state.selectedAvatar=b.dataset.avatar;renderAvatarPicker()}) }
 function openInvite(){$("invitePopup").classList.remove("hidden")}
 async function copyInvite(){
@@ -46,16 +46,20 @@ async function copyInvite(){
  }catch(e){if(e.name!=="AbortError")toast("لم تتم المشاركة. جرّب نسخ الرابط من جديد")}
 }
 function isStandalone(){return window.matchMedia("(display-mode: standalone)").matches||window.navigator.standalone===true}
+function dismissInstallPopup(){
+ try{localStorage.setItem("yalla_install_dismissed","1")}catch{}
+ $("installPopup").classList.add("hidden");
+}
 function showInstallPopup(){
- if(isStandalone())return;
+ if(isStandalone() || localStorage.getItem("yalla_install_dismissed")==="1")return;
  const ios=/iphone|ipad|ipod/i.test(navigator.userAgent),box=$("installInstructions"),action=$("installAction");
  if(ios){
   box.innerHTML="على iPhone أو iPad:<br>1. افتح الموقع في <b>Safari</b>.<br>2. اضغط زر <b>مشاركة</b> ⬆️.<br>3. اختر <b>Add to Home Screen / إضافة إلى الشاشة الرئيسية</b>.<br>4. اضغط <b>Add / إضافة</b>.";
-  action.textContent="فهمت، هضيفه من Safari";action.onclick=()=>{$("installPopup").classList.add("hidden");toast("افتح الموقع في Safari ثم مشاركة ← إضافة إلى الشاشة الرئيسية")};
+  action.textContent="فهمت، هضيفه من Safari";action.onclick=()=>{dismissInstallPopup();toast("افتح الموقع في Safari ثم مشاركة ← إضافة إلى الشاشة الرئيسية")};
  }else{
   box.textContent="ثبّت التطبيق للوصول السريع. قد يعرض المتصفح زر التثبيت إذا كان جهازك يدعمه.";
   action.textContent=state.installPrompt?"تثبيت التطبيق":"طريقة التثبيت";
-  action.onclick=async()=>{if(state.installPrompt){try{await state.installPrompt.prompt();await state.installPrompt.userChoice;state.installPrompt=null;if(isStandalone())$("installPopup").classList.add("hidden")}catch(e){toast("تعذر فتح نافذة التثبيت من المتصفح")}}else box.textContent="من قائمة المتصفح ⋮ أو مشاركة، اختر Install app / تثبيت التطبيق أو Add to Home Screen / إضافة إلى الشاشة الرئيسية."};
+  action.onclick=async()=>{if(state.installPrompt){try{await state.installPrompt.prompt();const choice=await state.installPrompt.userChoice;state.installPrompt=null;if(choice?.outcome==="accepted")dismissInstallPopup();else if(choice?.outcome==="dismissed")dismissInstallPopup()}catch(e){toast("تعذر فتح نافذة التثبيت من المتصفح")}}else box.textContent="من قائمة المتصفح ⋮ أو مشاركة، اختر Install app / تثبيت التطبيق أو Add to Home Screen / إضافة إلى الشاشة الرئيسية."};
  }
  $("installPopup").classList.remove("hidden");
 }
@@ -249,9 +253,9 @@ async function googleSignIn(){
 }
 async function loadChats(user){if(state.unsubscribeChats)state.unsubscribeChats();state.unsubscribeChats=onValue(ref(db,`userChats/${user.uid}`),async snap=>{const ids=Object.keys(snap.val()||{});const pairs=await Promise.all(ids.map(async id=>[id,(await get(ref(db,chatPath(id)))).val()]));state.chats={};for(const [id,c] of pairs){if(c?.members?.[user.uid])state.chats[id]=c}renderChats();if(state.activeChat&&state.chats[state.activeChat]){state.activeChatMeta={...state.activeChatMeta,...state.chats[state.activeChat]}}},err=>toast(friendlyError(err)))}
 function init(){state.retentionDays=Number(localStorage.getItem("yalla_retention")||7);$("authForm").addEventListener("submit",authSubmit);$("registerBtn").onclick=register;$("resetPasswordBtn").onclick=resetPassword;$("profileForm").addEventListener("submit",saveProfile);$("searchBtn").onclick=searchUser;$("userSearch").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();searchUser()}});$("newGroupBtn").onclick=createGroup;$("savedBtn").onclick=openSaved;$("statusBtn").onclick=showStatuses;$("developerBtn").onclick=showDeveloper;$("settingsBtn").onclick=showSettings;$("logoutBtn").onclick=async()=>{try{await signOut(auth)}catch(e){toast(friendlyError(e))}};$("messageForm").addEventListener("submit",sendMessage);$("messageInput").addEventListener("input",()=>{$("charCount").textContent=`${$("messageInput").value.length}/500`});$("chatSearchBtn").onclick=showChatSearch;$("closeChatSearch").onclick=()=>{$("searchInChatBar").classList.add("hidden");state.searchTerm="";renderMessages()};$("searchInChat").addEventListener("input",e=>{state.searchTerm=e.target.value;renderMessages()});$("chatMenuBtn").onclick=openChatMenu;$("mobileBackBtn").onclick=()=>$("appView").classList.remove("chat-open");$("modalClose").onclick=closeModal;$("modalBackdrop").addEventListener("click",e=>{if(e.target===$("modalBackdrop"))closeModal()});$("inviteClose").onclick=()=>$("invitePopup").classList.add("hidden");$("inviteShareBtn").onclick=copyInvite;$("googleBtn").onclick=googleSignIn;renderAvatarPicker();onAuthStateChanged(auth,async user=>{state.user=user;if(!user){if(state.unsubscribeMessages){state.unsubscribeMessages();state.unsubscribeMessages=null}if(state.unsubscribeChats){state.unsubscribeChats();state.unsubscribeChats=null}state.profile=null;state.chats={};state.activeChat=null;state.activeChatMeta=null;state.messages=[];state.blocked=false;state.sending=false;$("messageInput").value="";$("charCount").textContent="0/500";$("authEmail").value="";$("authPassword").value="";showView("authView");return}try{if(!isConfigReady()){showView("authView");toast("أضف databaseURL من Firebase Console إلى app.js");return}await loadProfile(user);loadChats(user)}catch(e){toast(friendlyError(e))}});if("serviceWorker"in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("./service-worker.js").catch(console.warn));window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();state.installPrompt=e;const action=$("installAction");if(action)action.textContent="تثبيت التطبيق"});
-$("installClose").onclick=()=>$("installPopup").classList.add("hidden");$("installLater").onclick=()=>$("installPopup").classList.add("hidden");
-window.addEventListener("appinstalled",()=>{$("installPopup").classList.add("hidden");toast("تم تثبيت Yalla Chat بنجاح")});
-getRedirectResult(auth).catch(e=>console.warn("Google redirect result",e));
+$("installClose").onclick=dismissInstallPopup;$("installLater").onclick=dismissInstallPopup;
+window.addEventListener("appinstalled",()=>{dismissInstallPopup();toast("تم تثبيت Yalla Chat بنجاح")});
+getRedirectResult(auth).catch(e=>{console.error("Google redirect result",e);toast(friendlyError(e))});
 setTimeout(openInvite,700);if(!isStandalone())setTimeout(showInstallPopup,500);
 }
 init();
