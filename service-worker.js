@@ -1,4 +1,4 @@
-const CACHE_NAME = "yalla-chat-static-v4";
+const CACHE_NAME = "yalla-chat-static-v6";
 const STATIC_ASSETS = ["./", "./index.html", "./style.css", "./manifest.json", "./icon-192.png", "./icon-512.png", "./apple-touch-icon.png", "./yalla-chat-logo.png"];
 self.addEventListener("install", event => {event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS)).then(() => self.skipWaiting()));});
 self.addEventListener("activate", event => {event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key.startsWith("yalla-chat-static-") && key !== CACHE_NAME).map(key => caches.delete(key)))).then(() => self.clients.claim()));});

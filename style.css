@@ -45,3 +45,5 @@ button:disabled{opacity:.65;cursor:wait}
 .modal textarea{width:100%;min-height:82px;border:1px solid var(--line);background:#0d1920;color:var(--text);padding:12px 14px;border-radius:12px;font:inherit;resize:vertical}
 
 .statuses-page{min-height:55vh}.statuses-page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.statuses-page-head p{margin:0}.status-list{max-height:65vh}.status-entry{cursor:pointer}.status-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;margin-top:12px}.status-stats button{border:1px solid #ffffff55;background:#0002;color:white;padding:5px 8px;border-radius:8px;font-size:10px}.status-open-hint{display:block;margin-top:8px;color:#ffffffb8}
+
+.auth-feedback{margin:14px 0 4px;padding:12px 14px;border-radius:12px;font-size:13px;line-height:1.8;overflow-wrap:anywhere}.auth-feedback.error{background:#4a1d28;border:1px solid #b94b61;color:#ffe1e7}.auth-feedback.success{background:#143b32;border:1px solid #287d66;color:#d7fff2}
