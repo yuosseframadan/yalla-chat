@@ -39,8 +39,11 @@
     <form id="profileForm" class="auth-card">
       <img class="brand-logo compact-logo" src="./yalla-chat-logo.png" alt="Yalla Chat"><h1>أهلاً بيك!</h1>
       <p class="muted">اختار اسم مستعار وصورة رمزية للبدء.</p>
-      <label for="nickname">الاسم المستعار</label>
-      <input id="nickname" maxlength="30" required placeholder="اسمك داخل Yalla Chat">
+      <label for="nickname">اسم العرض</label>
+      <input id="nickname" maxlength="30" required placeholder="الاسم الذي سيظهر لأصدقائك">
+      <label for="username">اسم المستخدم</label>
+      <input id="username" maxlength="24" minlength="3" pattern="[A-Za-z0-9_]+" autocomplete="username" required placeholder="مثال: youssef_22">
+      <small class="muted">حروف إنجليزية وأرقام وشرطة سفلية فقط.</small>
       <label>اختار أفاتار</label>
       <div id="avatarPicker" class="avatar-picker"></div>
       <button class="primary" type="submit">حفظ والمتابعة</button>
@@ -69,11 +72,10 @@
         <div class="header-tools"><button id="chatSearchBtn" class="icon-btn" title="بحث داخل المحادثة">⌕</button><button id="chatMenuBtn" class="icon-btn" title="خيارات المحادثة">⋯</button></div>
       </header>
       <div id="searchInChatBar" class="search-in-chat hidden"><input id="searchInChat" placeholder="ابحث في الرسائل..."><button id="closeChatSearch" class="text-btn">إغلاق</button></div>
-      <div id="blockedBanner" class="blocked-banner hidden">لقد تم حظرك من قبل هذا المستخدم</div>
+      <div id="blockedBanner" class="blocked-banner hidden">المراسلة متوقفة بسبب الحظر</div>
       <div id="messages" class="messages"><div class="welcome-panel"><img class="welcome-logo-image" src="./icon-192.png" alt="Yalla Chat"><h2>أهلاً بيك في Yalla Chat</h2><p>اختار محادثة من القائمة أو ابحث عن صديق.</p></div></div>
       <form id="messageForm" class="composer hidden">
-        <input id="messageInput" maxlength="500" placeholder="اكتب رسالة... (500 حرف كحد أقصى)" autocomplete="off">
-        <span id="charCount" class="char-count">0/500</span>
+        <input id="messageInput" maxlength="500" placeholder="اكتب رسالة..." autocomplete="off">
         <button id="sendBtn" class="send-btn" type="submit" aria-label="إرسال">➤</button>
       </form>
     </section>

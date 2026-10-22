@@ -31,3 +31,17 @@ button:disabled{opacity:.65;cursor:wait}
 .status-editor{position:relative;min-height:min(68vh,560px);border-radius:22px;padding:24px 18px 18px;display:flex;flex-direction:column;gap:14px;color:#fff;transition:background .2s}.status-editor-top{font-size:13px;font-weight:800;display:flex;flex-direction:column;gap:4px}.status-editor-top span{font-size:11px;opacity:.75;font-weight:500}.status-close{position:absolute;left:10px;top:8px;border:0;background:#0002;color:white;font-size:25px;border-radius:50%;width:36px;height:36px}.status-editor textarea{flex:1;min-height:250px;resize:vertical;border:0;outline:0;background:transparent;color:white;font:700 24px/1.8 'Cairo',sans-serif;text-align:center;padding:24px 4px;white-space:pre-wrap}.status-editor textarea::placeholder{color:#ffffffb8}.status-editor-bottom{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:11px}.status-colors{display:flex;flex-wrap:wrap;gap:8px}.status-color{width:26px;height:26px;border:2px solid #ffffff55;border-radius:50%;outline:2px solid transparent;outline-offset:2px}.status-color.selected{outline-color:#fff}.status-editor .primary{width:100%;background:#fff;color:#15223c}.status-entry{min-height:100px;background-size:cover;border-radius:16px}.status-entry p{font-size:18px;font-weight:700;line-height:1.8}
 
 .send-state{font-size:10px;color:#c8d7e5}.send-state.failed{color:#ffb3b3;font-weight:700}.message .msg-actions button[data-action="retry"]{color:#ffb3b3;font-weight:700}
+
+/* Group management and contact picker */
+.contact-pick-list{display:grid;gap:7px;max-height:180px;overflow:auto;margin:8px 0;padding:8px;border:1px solid var(--line);border-radius:12px}
+.contact-pick{display:flex;align-items:center;gap:9px;margin:0;padding:8px;border-radius:9px;background:#172a33;cursor:pointer}
+.contact-pick input{width:17px;height:17px;accent-color:#2588ff}
+.contact-pick span{flex:1;font-size:12px}
+.contact-pick small{font-size:10px;color:var(--muted)}
+.group-member-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:9px 0;border-bottom:1px solid var(--line)}
+.group-member-row>span{flex:1;min-width:100px}.group-member-row b,.group-member-row small{display:block}.group-member-row small{font-size:10px;color:var(--muted)}
+.group-member-row button{border:1px solid var(--line);border-radius:8px;background:#20343e;color:var(--text);font-size:10px;padding:7px}
+.danger{background:#7d2630!important;border:1px solid #b93a47!important;color:#fff!important}
+.modal textarea{width:100%;min-height:82px;border:1px solid var(--line);background:#0d1920;color:var(--text);padding:12px 14px;border-radius:12px;font:inherit;resize:vertical}
+
+.statuses-page{min-height:55vh}.statuses-page-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.statuses-page-head p{margin:0}.status-list{max-height:65vh}.status-entry{cursor:pointer}.status-stats{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;margin-top:12px}.status-stats button{border:1px solid #ffffff55;background:#0002;color:white;padding:5px 8px;border-radius:8px;font-size:10px}.status-open-hint{display:block;margin-top:8px;color:#ffffffb8}

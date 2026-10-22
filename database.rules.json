@@ -31,16 +31,16 @@
     "chats": {
       "$chatId": {
         ".read": "auth != null && data.child('members').child(auth.uid).val() === true",
-        ".write": "auth != null && !data.exists() && newData.child('createdBy').val() === auth.uid && newData.child('members').child(auth.uid).val() === true && newData.child('members').hasChildren()",
-        ".validate": "newData.child('members').val() === data.child('members').val() || !data.exists()",
+        ".write": "auth != null && ((!data.exists() && newData.child('createdBy').val() === auth.uid && newData.child('members').child(auth.uid).val() === true && newData.child('members').hasChildren()) || (data.exists() && !newData.exists() && data.child('createdBy').val() === auth.uid))",
+        ".validate": "newData.child('members').val() === data.child('members').val() || !data.exists() || data.child('createdBy').val() === auth.uid || data.child('admins').child(auth.uid).val() === true",
         "members": {
-          ".write": "auth != null && !data.exists() && root.child('chats').child($chatId).child('createdBy').val() === auth.uid",
+          ".write": "auth != null && (data.parent().child('createdBy').val() === auth.uid || data.parent().child('admins').child(auth.uid).val() === true)",
           "$uid": {
             ".validate": "newData.val() === true"
           }
         },
         "title": {
-          ".write": "auth != null && data.parent().child('members').child(auth.uid).val() === true"
+          ".write": "auth != null && (data.parent().child('createdBy').val() === auth.uid || data.parent().child('admins').child(auth.uid).val() === true)"
         },
         "lastText": {
           ".write": "auth != null && data.parent().child('members').child(auth.uid).val() === true && newData.isString() && newData.val().length <= 100"
@@ -59,6 +59,16 @@
               }
             }
           }
+        },
+        "description": {
+          ".write": "auth != null && (data.parent().child('createdBy').val() === auth.uid || data.parent().child('admins').child(auth.uid).val() === true)",
+          ".validate": "newData.isString() && newData.val().length <= 180"
+        },
+        "admins": {
+          ".write": "auth != null && (data.parent().child('createdBy').val() === auth.uid || data.parent().child('admins').child(auth.uid).val() === true)",
+          "$uid": {
+            ".validate": "newData.val() === true"
+          }
         }
       }
     },
@@ -66,14 +76,14 @@
       "$uid": {
         "$chatId": {
           ".read": "auth != null && auth.uid === $uid",
-          ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (newData.val() === true && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true && root.child('chats').child($chatId).child('members').child($uid).val() === true))"
+          ".write": "auth != null && ((auth.uid === $uid && !newData.exists()) || (!newData.exists() && !root.child('chats').child($chatId).exists()) || (newData.val() === true && root.child('chats').child($chatId).child('members').child(auth.uid).val() === true && root.child('chats').child($chatId).child('members').child($uid).val() === true))"
         }
       }
     },
     "blocks": {
       "$ownerUid": {
         "$blockedUid": {
-          ".read": "auth != null && auth.uid === $ownerUid",
+          ".read": "auth != null && (auth.uid === $ownerUid || auth.uid === $blockedUid)",
           ".write": "auth != null && auth.uid === $ownerUid && (!newData.exists() || newData.val() === true)"
         }
       }
@@ -94,7 +104,13 @@
       ".read": "auth != null",
       "$statusId": {
         ".write": "auth != null && ((!data.exists() && newData.child('s').val() === auth.uid) || (data.child('s').val() === auth.uid && newData.child('s').val() === auth.uid))",
-        ".validate": "newData.hasChildren(['s','t','ts','expiresAt']) && newData.child('s').isString() && newData.child('t').isString() && newData.child('t').val().length > 0 && newData.child('t').val().length <= 280 && newData.child('ts').isNumber() && newData.child('expiresAt').isNumber()"
+        ".validate": "newData.hasChildren(['s','t','ts','expiresAt']) && newData.child('s').isString() && newData.child('t').isString() && newData.child('t').val().length > 0 && newData.child('t').val().length <= 280 && newData.child('ts').isNumber() && newData.child('expiresAt').isNumber()",
+        "views": {
+          "$viewerUid": {
+            ".write": "auth != null && auth.uid === $viewerUid && root.child('statuses').child($statusId).child('s').val() !== auth.uid && newData.val() === true",
+            ".validate": "newData.val() === true"
+          }
+        }
       }
     }
   }
