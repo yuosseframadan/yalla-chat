@@ -2,110 +2,79 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101b24">
-  <meta name="description" content="Yalla Chat — محادثات نصية بسيطة وسريعة">
-  <meta name="color-scheme" content="dark light">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Yalla Chat">
-  <link rel="apple-touch-icon" href="./apple-touch-icon.png">
-  <link rel="manifest" href="./manifest.json">
-  <link rel="stylesheet" href="./style.css">
-  <title>Yalla Chat</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08111f">
+  <meta name="description" content="Yalla Chat — قابل أشخاصًا جددًا في محادثات نصية سريعة وآمنة.">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="/yalla-chat-logo.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="stylesheet" href="/style.css?v=yc20261024">
+  <title>Yalla Chat — قابل ناس جديدة</title>
 </head>
 <body>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <section id="authView" class="auth-shell">
-    <div class="auth-card">
-      <img class="brand-logo" src="./yalla-chat-logo.png" alt="Yalla Chat">
-      <p class="eyebrow">محادثتك، بطريقتك</p>
-      <h1>Yalla Chat</h1>
-      <p class="muted">محادثات نصية خفيفة وسريعة</p>
-      <div id="authFeedback" class="auth-feedback hidden" aria-live="polite"></div>
-      <form id="authForm">
-        <label for="authEmail">البريد الإلكتروني</label>
-        <input id="authEmail" type="email" autocomplete="email" placeholder="name@example.com" required>
-        <label for="authPassword">كلمة المرور</label>
-        <input id="authPassword" type="password" autocomplete="current-password" minlength="6" placeholder="6 أحرف على الأقل" required>
-        <button id="loginBtn" class="primary" type="submit">تسجيل الدخول</button>
-        <button id="googleBtn" class="google-btn" type="button"><span class="google-g">G</span> المتابعة باستخدام Google</button>
-        <button id="registerBtn" class="secondary" type="button">إنشاء حساب جديد</button>
-        <button id="resetPasswordBtn" class="text-btn auth-reset" type="button">نسيت كلمة المرور؟</button>
-      </form>
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Yalla Chat home"><img src="/yalla-chat-logo.png" alt="Yalla Chat logo"><span>Yalla <b>Chat</b></span></a>
+    <div class="top-actions">
+      <div class="online-pill"><span class="live-dot"></span><strong id="onlineCount">—</strong><span data-i18n="online">متصل الآن</span></div>
+      <button id="langBtn" class="ghost-btn" aria-label="Switch language">EN</button>
+      <button id="themeBtn" class="ghost-btn" aria-label="Toggle theme">☼</button>
     </div>
-  </section>
+  </header>
 
-  <section id="profileView" class="auth-shell hidden">
-    <form id="profileForm" class="auth-card">
-      <img class="brand-logo compact-logo" src="./yalla-chat-logo.png" alt="Yalla Chat"><h1>أهلاً بيك!</h1>
-      <p class="muted">اختار اسم مستعار وصورة رمزية للبدء.</p>
-      <label for="nickname">اسم العرض</label>
-      <input id="nickname" maxlength="30" required placeholder="الاسم الذي سيظهر لأصدقائك">
-      <label for="username">اسم المستخدم</label>
-      <input id="username" maxlength="24" minlength="3" pattern="[A-Za-z0-9_]+" autocomplete="username" required placeholder="مثال: youssef_22">
-      <small class="muted">حروف إنجليزية وأرقام وشرطة سفلية فقط.</small>
-      <label>اختار أفاتار</label>
-      <div id="avatarPicker" class="avatar-picker"></div>
-      <button class="primary" type="submit">حفظ والمتابعة</button>
-    </form>
-  </section>
-
-  <main id="appView" class="app-shell hidden">
-    <aside id="sidebar" class="sidebar">
-      <header class="side-header">
-        <div class="brand-inline"><img class="brand-logo-inline" src="./icon-192.png" alt=""><div><strong>Yalla Chat</strong><small>خليك على تواصل</small></div></div>
-        <button id="settingsBtn" class="icon-btn" title="الإعدادات" aria-label="الإعدادات">⚙</button>
-      </header>
-      <div class="me-strip"><span id="myAvatar" class="avatar">Y</span><div class="me-info"><strong id="myName">حسابي</strong><small id="myEmail"></small></div><button id="logoutBtn" class="text-btn">خروج</button></div>
-      <div class="search-row"><input id="userSearch" placeholder="ابحث بالبريد أو اسم المستخدم"><button id="searchBtn" class="primary compact">بحث</button></div>
-      <div class="side-actions"><button id="newGroupBtn" class="secondary">＋ مجموعة</button><button id="savedBtn" class="secondary">الرسائل المحفوظة</button><button id="statusBtn" class="secondary">الحالات النصية</button></div>
-      <div class="section-caption">المحادثات</div>
-      <div id="chatList" class="chat-list"><div class="empty-note">محادثاتك هتظهر هنا</div></div>
-      <div class="side-footer"><button id="developerBtn" class="support-btn">⌘ مطور المشروع · NexCode</button></div>
-    </aside>
-
-    <section class="conversation">
-      <header id="chatHeader" class="chat-header">
-        <button id="mobileBackBtn" class="icon-btn mobile-only" aria-label="رجوع">→</button>
-        <div class="header-avatar" id="headerAvatar">Y</div>
-        <div class="header-details"><strong id="chatTitle">اختار محادثة</strong><small id="chatSubtitle">ابدأ بالتواصل مع أصدقائك</small></div>
-        <div class="header-tools"><button id="chatSearchBtn" class="icon-btn" title="بحث داخل المحادثة">⌕</button><button id="chatMenuBtn" class="icon-btn" title="خيارات المحادثة">⋯</button></div>
-      </header>
-      <div id="searchInChatBar" class="search-in-chat hidden"><input id="searchInChat" placeholder="ابحث في الرسائل..."><button id="closeChatSearch" class="text-btn">إغلاق</button></div>
-      <div id="blockedBanner" class="blocked-banner hidden">المراسلة متوقفة بسبب الحظر</div>
-      <div id="messages" class="messages"><div class="welcome-panel"><img class="welcome-logo-image" src="./icon-192.png" alt="Yalla Chat"><h2>أهلاً بيك في Yalla Chat</h2><p>اختار محادثة من القائمة أو ابحث عن صديق.</p></div></div>
-      <form id="messageForm" class="composer hidden">
-        <input id="messageInput" maxlength="500" placeholder="اكتب رسالة..." autocomplete="off">
-        <button id="sendBtn" class="send-btn" type="submit" aria-label="إرسال">➤</button>
-      </form>
+  <main id="homeView" class="home-wrap">
+    <section class="hero-grid">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="spark">✦</span><span data-i18n="eyebrow">مكانك لمحادثة جديدة</span></div>
+        <h1 data-i18n-html="heroTitle">غريب اليوم،<br><span>صديق محتمل بكرة.</span></h1>
+        <p class="hero-lead" data-i18n="heroLead">ابدأ محادثة نصية مع شخص جديد من أي مكان. بدون حساب، بدون تعقيد — أنت تختار متى تبدأ ومتى تنهي.</p>
+        <div class="hero-actions">
+          <button id="startBtn" class="primary-btn"><span>✦</span><span data-i18n="startChat">ابدأ محادثة</span><span class="btn-arrow">←</span></button>
+          <button id="howBtn" class="secondary-btn" data-i18n="howItWorks">إزاي بيشتغل؟</button>
+        </div>
+        <div class="trust-row"><span>✓ <span data-i18n="noAccount">من غير تسجيل</span></span><span>✓ <span data-i18n="textOnly">شات نصي</span></span><span>✓ <span data-i18n="youControl">أنت المتحكم</span></span></div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="floating-card card-eg"><span class="flag">🇪🇬</span><div><b data-i18n="personFromEgypt">شخص من مصر</b><small data-i18n="readyToChat">جاهز للدردشة</small></div><i class="mini-dot"></i></div>
+        <div class="floating-card card-world"><span class="world-icon">◎</span><div><b data-i18n="peopleEverywhere">ناس من كل مكان</b><small data-i18n="oneClickAway">على بُعد ضغطة</small></div></div>
+        <div class="chat-preview"><div class="preview-top"><span class="preview-avatar">✦</span><div><b data-i18n="newFriend">صديق جديد</b><small><i class="mini-dot"></i> <span data-i18n="connected">متصل</span></small></div><span class="preview-flag">🌍</span></div><div class="preview-messages"><div class="bubble bubble-other" data-i18n="previewHello">أهلاً! عامل إيه؟ 👋</div><div class="bubble bubble-me" data-i18n="previewReply">أهلاً بيك، منور!</div><div class="bubble bubble-other bubble-short" data-i18n="previewQuestion">بتحب البرمجة؟</div></div><div class="preview-input"><span data-i18n="writeMessage">اكتب رسالة...</span><b>➤</b></div></div>
+        <div class="sparkle sparkle-a">✦</div><div class="sparkle sparkle-b">✧</div>
+      </div>
     </section>
+
+    <section class="feature-strip">
+      <article><span class="feature-icon blue">↗</span><div><b data-i18n="fastMatch">دخول سريع</b><p data-i18n="fastMatchDesc">ابدأ كضيف في ثواني.</p></div></article>
+      <article><span class="feature-icon purple">⌘</span><div><b data-i18n="randomTalk">محادثات عشوائية</b><p data-i18n="randomTalkDesc">كل مرة فرصة جديدة للتعارف.</p></div></article>
+      <article><span class="feature-icon mint">♧</span><div><b data-i18n="safetyFirst">الأمان أولاً</b><p data-i18n="safetyFirstDesc">إبلاغ وحظر ومكافحة للرسائل المسيئة.</p></div></article>
+    </section>
+
+    <section id="howSection" class="how-section">
+      <div><span class="section-kicker" data-i18n="simpleTitle">ببساطة</span><h2 data-i18n="howTitle">ثلاث خطوات وتبدأ الكلام</h2></div>
+      <div class="steps-grid"><article><span>01</span><h3 data-i18n="step1Title">اضغط ابدأ</h3><p data-i18n="step1Desc">مش محتاج بريد أو حساب.</p></article><article><span>02</span><h3 data-i18n="step2Title">اتصل بشخص جديد</h3><p data-i18n="step2Desc">هنوصلك بمستخدم متاح ونوضح الدولة المتاحة.</p></article><article><span>03</span><h3 data-i18n="step3Title">اتكلم أو اعمل التالي</h3><p data-i18n="step3Desc">أنهِ المحادثة في أي وقت وابدأ واحدة جديدة.</p></article></div>
+    </section>
+
+    <section class="safety-note"><span class="safety-symbol">盾</span><div><b data-i18n="safetyTitle">خلي المحادثة لطيفة وآمنة</b><p data-i18n="safetyText">لا تشارك عنوانك أو بياناتك الخاصة. قد تُراجع المحادثات النشطة بواسطة أنظمة الإشراف والمشرفين المصرّح لهم لأغراض السلامة. تُحذف الرسائل عند انتهاء المحادثة، إلا إذا قُدّم بلاغ يتطلب الاحتفاظ بدليل محدود.</p></div><button id="rulesBtn" class="text-link" data-i18n="communityRules">قواعد المجتمع</button></section>
   </main>
 
-  <div id="modalBackdrop" class="modal-backdrop hidden">
-    <section id="modal" class="modal" role="dialog" aria-modal="true">
-      <button id="modalClose" class="modal-close" aria-label="إغلاق">×</button>
-      <div id="modalContent"></div>
+  <main id="chatView" class="chat-layout hidden">
+    <section class="chat-panel">
+      <header class="chat-top"><button id="backHomeBtn" class="icon-button" aria-label="Back">←</button><div class="chat-person"><span id="peerAvatar" class="peer-avatar">?</span><div><strong id="peerName" data-i18n="findingPerson">بنبحث عن شخص...</strong><small id="peerStatus"><i class="mini-dot"></i><span data-i18n="connecting">جاري الاتصال</span></small></div></div><div id="peerCountry" class="country-pill hidden"><span id="peerFlag">🌍</span><span id="peerCountryName">—</span></div><button id="reportBtn" class="icon-button danger-icon hidden" title="Report">⚑</button></header>
+      <div id="searchingPanel" class="searching-panel"><div class="search-animation"><span></span><span></span><span></span></div><h2 data-i18n="searchingTitle">بنلاقي لك حد تتكلم معاه</h2><p data-i18n="searchingText">ثواني بسيطة، وهنوصلك بشخص متاح.</p><button id="cancelSearchBtn" class="secondary-btn" data-i18n="cancel">إلغاء</button></div>
+      <div id="messages" class="messages hidden" aria-live="polite"></div>
+      <div id="emptyChatHint" class="empty-chat-hint hidden"><span>✦</span><p data-i18n="sayHello">ابدأ بكلمة لطيفة 👋</p></div>
+      <form id="composer" class="composer hidden"><input id="messageInput" maxlength="1000" autocomplete="off" placeholder="اكتب رسالتك..." data-i18n-placeholder="messagePlaceholder"><button class="send-button" type="submit" aria-label="Send">➤</button></form>
+      <footer class="chat-footer"><button id="nextBtn" class="next-button hidden"><span>⟳</span><span data-i18n="nextPerson">الشخص التالي</span></button><button id="endBtn" class="end-button hidden" data-i18n="endChat">إنهاء المحادثة</button><span class="footer-tip" data-i18n="chatFooterTip">خليك محترم، وبلّغ عن أي إساءة.</span></footer>
     </section>
-  </div>
-  <div id="installPopup" class="install-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="installTitle">
-    <section class="install-card">
-      <img src="./icon-192.png" class="install-logo" alt="Yalla Chat">
-      <button id="installClose" class="modal-close" aria-label="إغلاق">×</button>
-      <p class="eyebrow">YALLA CHAT · PWA</p>
-      <h2 id="installTitle">خلّي يلا شات على شاشتك الرئيسية</h2>
-      <p class="muted">افتحه بسرعة كتطبيق، من غير ما تدور على الرابط كل مرة.</p>
-      <div id="installInstructions" class="install-instructions"></div>
-      <button id="installAction" class="primary install-action">تثبيت التطبيق</button>
-      <button id="installLater" class="text-btn install-later">مش دلوقتي</button>
-    </section>
-  </div>
-  <div id="invitePopup" class="invite-popup hidden">
-    <button id="inviteClose" class="modal-close" aria-label="إغلاق">×</button>
-    <div class="invite-icon">✦</div><strong>خلي أصحابك ينضموا ليك</strong>
-    <p>شارك رابط Yalla Chat وابدأوا الكلام.</p>
-    <button id="inviteShareBtn" class="primary">نسخ رابط الدعوة</button>
-  </div>
-  <script type="module" src="./app.js?v=20261022-authfix2"></script>
+    <aside class="chat-side"><div class="side-logo"><img src="/yalla-chat-logo.png" alt=""><span>Yalla Chat</span></div><div class="side-stat"><span class="live-dot"></span><b id="chatOnlineCount">—</b><small data-i18n="peopleOnlineNow">شخص متصل الآن</small></div><div class="side-divider"></div><h3 data-i18n="chatTipsTitle">نصائح سريعة</h3><div class="tip-item"><span>✦</span><p data-i18n="tip1">ابدأ بتحية بسيطة وسؤال لطيف.</p></div><div class="tip-item"><span>⌁</span><p data-i18n="tip2">ما تشاركش معلوماتك الشخصية.</p></div><div class="tip-item"><span>⚑</span><p data-i18n="tip3">لو واجهت إساءة، اخرج وبلّغ.</p></div><a class="nexcode-link" href="https://mute-mouse-67d8.yousseframadan2211.workers.dev/" target="_blank" rel="noopener noreferrer"><span>N</span><span data-i18n="madeBy">تم التطوير بواسطة NexCode</span><span>↗</span></a></aside>
+  </main>
+
+  <footer id="siteFooter" class="site-footer"><span>© <span id="yearNow"></span> Yalla Chat</span><div><button id="footerRulesBtn" class="text-link" data-i18n="privacyRules">الخصوصية والقواعد</button><a href="https://mute-mouse-67d8.yousseframadan2211.workers.dev/" target="_blank" rel="noopener noreferrer" class="text-link" data-i18n="nexcode">NexCode ↗</a></div></footer>
+
+  <div id="modalBackdrop" class="modal-backdrop hidden"><section class="modal-card" role="dialog" aria-modal="true"><button id="modalClose" class="modal-close" aria-label="Close">×</button><div id="modalContent"></div></section></div>
+  <div id="installOverlay" class="install-overlay hidden"><section class="install-card"><button id="installClose" class="modal-close" aria-label="Close">×</button><img class="install-logo" src="/yalla-chat-logo.png" alt="Yalla Chat"><span class="section-kicker" data-i18n="installKicker">خلي يلا شات أقرب ليك</span><h2 data-i18n="installTitle">ثبّت Yalla Chat على جهازك</h2><p data-i18n="installDesc">افتحه بسرعة من الشاشة الرئيسية، بتجربة شبه التطبيقات.</p><div id="installInstructions" class="install-instructions"></div><button id="installAction" class="primary-btn install-action" data-i18n="installButton">تثبيت التطبيق</button><button id="installLater" class="text-link install-later" data-i18n="maybeLater">مش دلوقتي</button></section></div>
+  <div id="invitePopup" class="invite-popup hidden"><button id="inviteClose" class="modal-close" aria-label="Close">×</button><div class="invite-mark">✦</div><span class="section-kicker" data-i18n="inviteKicker">اللمة أحلى مع أصحابك</span><h3 data-i18n="inviteTitle">اعزم صاحبك على Yalla Chat</h3><p data-i18n="inviteDesc">ابعتله الرابط وخليه يجرب محادثات جديدة بنفسه. ضغطة واحدة وتبدأوا تكتشفوا ناس واهتمامات جديدة.</p><button id="inviteShareBtn" class="primary-btn invite-share" data-i18n="inviteButton">نسخ رابط الدعوة</button></div>
+  <div id="adminRoot" class="admin-root hidden"></div>
+  <script type="module" src="/app.js?v=yc20261024"></script>
 </body>
 </html>
